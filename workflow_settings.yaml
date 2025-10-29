@@ -1,0 +1,17 @@
+defaultAssertionDataset: superform_assertion_423985261
+defaultDataset: superform_outputs_423985261
+defaultLocation: US
+defaultProject: growthbook-ga4-428502
+vars:
+  GA4_DATASET: analytics_423985261
+  GA4_DATASET_LOCATION: US
+  INSTALLATION_TIME: '2025-10-29 07:54:23'
+  LABEL_EXECUTION_OPERATION: daily_workflow
+  LABEL_GENERIC_BRAND: superformlabs
+  LABEL_GENERIC_LICENSE_TYPE: core
+  LABEL_GENERIC_PACKAGE_VERSION: 1-18-0
+  LABEL_GENERIC_TOOL: ga4dataform
+  LOCAL_TIMEZONE: America/Chicago
+  OUTPUTS_DATASET: superform_outputs_423985261
+  QUALITY_DATASET: superform_quality_423985261
+  TRANSFORMATIONS_DATASET: superform_transformations_423985261
