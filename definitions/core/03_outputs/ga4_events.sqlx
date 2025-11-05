@@ -73,7 +73,7 @@ with query_source as (
     -- filters go here
 
     -- intraday filter: exclude
-    and contains_substr(_table_suffix, 'intraday') is true
+    and contains_substr(_table_suffix, 'intraday') is false
     -- fresh filter: exclude
     and contains_substr(_table_suffix, 'fresh') is false
 
