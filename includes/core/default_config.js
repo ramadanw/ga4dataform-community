@@ -94,11 +94,7 @@ const URL_PARAMS_ARRAY = [
     { name: "_gl" },
 ];
 
-const CUSTOM_EVENT_PARAMS_ARRAY = [
-    { name: "name", type: "string", description: "The name label for the event"},
-    { name: "is_offer_active", type: "boolean", description: "whether theres's an active offer being shown or not"},
-    { name: "index", type: "integer", description: "The index label of the event"}
-    ];
+const CUSTOM_EVENT_PARAMS_ARRAY = [];
 
 const CUSTOM_USER_PROPERTIES_ARRAY = [];
 

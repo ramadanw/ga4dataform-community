@@ -65,7 +65,11 @@ const customConfig = {
   //    { name: "event_value", type: "decimal" },
   //    { name: "event_value", type: "string", renameTo: "event_value_string" }
   // ],
-  CUSTOM_EVENT_PARAMS_ARRAY: [],
+  CUSTOM_EVENT_PARAMS_ARRAY: [
+    { name: "name", type: "string", description: "The name label for the event"},
+    { name: "is_offer_active", type: "string", description: "whether theres's an active offer being shown or not"},
+    { name: "index", type: "int", description: "The index label of the event"}
+    ],
 
   // user properties
   // example:
