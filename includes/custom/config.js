@@ -68,7 +68,13 @@ const customConfig = {
   CUSTOM_EVENT_PARAMS_ARRAY: [
     { name: "name", type: "string", description: "The name label for the event"},
     { name: "is_offer_active", type: "string", description: "whether theres's an active offer being shown or not"},
-    { name: "index", type: "int", description: "The index label of the event"}
+    { name: "index", type: "int", description: "The index label of the event"},
+    { name: "reason", type: "string", description: "The reason chosen for the event"},
+    { name: "experiment_id", type: "string", description: "The ab test experiment name"},
+    { name: "variation_id", type: "int", description: "The ab test variant ID"},
+    { name: "percentage", type: "int", description: "The percentage value of the event"},
+    { name: "choice", type: "string", description: "The choice chosen"},
+    { name: "type", type: "string", description: "The agnostic type parameters for events"},
     ],
 
   // user properties
