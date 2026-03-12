@@ -7,8 +7,13 @@ config {
 
 js {
     const { helpers } = require("includes/core/helpers");
+<<<<<<< HEAD
     const config = helpers.getConfig();
 
+=======
+    const config = helpers.getModuleConfig('ga4');
+    
+>>>>>>> refs/heads/main
     const TABLES_OUTPUT = config.TABLES_OUTPUT
 }
 
