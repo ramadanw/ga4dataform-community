@@ -61,8 +61,10 @@ pre_operations {
 
 with query_source as (
 
+    -- finalized daily tables
     select
       _table_suffix as table_suffix,
+      false as _is_intraday,
       *
     from ${ref("events_*")}
     where true
@@ -88,6 +90,38 @@ with query_source as (
     -- leave cookieless pings in - those will be in the events table do not have a session
     -- and user_pseudo_id is not null
 
+    union all
+
+    -- intraday tables: only for dates that don't yet have a finalized table
+    select
+      _table_suffix as table_suffix,
+      true as _is_intraday,
+      *
+    from ${ref("events_*")}
+    where true
+
+    -- incrementality clause
+    and parse_date('%Y%m%d', regexp_extract(_table_suffix, '[0-9]+')) >= date_checkpoint
+
+    -- intraday filter: include only intraday
+    and contains_substr(_table_suffix, 'intraday') is true
+
+    -- key guard: skip if a finalized table already exists for this date
+    and parse_date('%Y%m%d', regexp_extract(_table_suffix, '[0-9]+')) not in (
+      select distinct parse_date('%Y%m%d', _table_suffix)
+      from ${ref("events_*")}
+      where contains_substr(_table_suffix, 'intraday') is false
+      and   contains_substr(_table_suffix, 'fresh') is false
+    )
+
+    -- filters from config:
+    -- discard unwanted events
+    and ${helpers.generateFilterTypeFromListSQL("exclude", "event_name", config.EVENTS_TO_EXCLUDE)}
+    -- discard unwanted hostnames
+    and ${helpers.generateFilterTypeFromListSQL("exclude", "device.web_info.hostname", config.HOSTNAME_EXCLUDE)}
+    -- only include wanted hostnames
+    and ${helpers.generateFilterTypeFromListSQL("include", "device.web_info.hostname", config.HOSTNAME_INCLUDE_ONLY)}
+
 ),
 
 step1 as (
@@ -98,7 +132,10 @@ step1 as (
     event_name,
     table_suffix,
     parse_date('%Y%m%d', event_date) as event_date, -- partition column
-    date_diff(current_date(), cast(event_date as date format 'YYYYMMDD'), day) > ${config.DATA_IS_FINAL_DAYS} as is_final, -- used for incrementality
+    case
+      when _is_intraday then false  -- intraday is never final; will be replaced when GA4 finalizes the day
+      else date_diff(current_date(), cast(event_date as date format 'YYYYMMDD'), day) > ${config.DATA_IS_FINAL_DAYS}
+    end as is_final, -- used for incrementality
 
     struct(
       -- timestamps
@@ -617,7 +654,7 @@ deduped as (
                   page_title
                   )) as event_params),
   from add_meta_info
-  qualify row_number() over ( partition by event_id ) = 1
+  qualify row_number() over ( partition by event_id order by _is_intraday asc ) = 1
 ),
 
 add_row_numbers as (
